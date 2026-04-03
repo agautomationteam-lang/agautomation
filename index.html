@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AG Automation — Online Presence & Marketing for Small Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F7F2EA;--cream2:#EFE8D8;--warm:#FAF7F2;
+  --charcoal:#1A1714;--brown:#5C3D2E;
+  --gold:#C8902A;--gold2:#E4B04A;
+  --muted:#7A6A5A;--border:rgba(92,61,46,0.12);
+  --nav-h:72px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--charcoal);overflow-x:hidden}
+
+/* ─── POPUP ─── */
+.pop-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(26,23,20,0.7);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  animation:fadeIn .3s ease;
+}
+.pop-overlay.off{display:none}
+.pop-box{
+  background:var(--warm);border-radius:8px;
+  max-width:540px;width:100%;overflow:hidden;
+  animation:popIn .4s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes popIn{from{opacity:0;transform:translateY(32px) scale(.96)}to{opacity:1;transform:none}}
+.pop-head{
+  background:var(--charcoal);padding:40px 44px 32px;position:relative;
+}
+.pop-close{
+  position:absolute;top:18px;right:18px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.07);border:none;
+  color:rgba(255,255,255,0.4);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s;
+}
+.pop-close:hover{background:rgba(255,255,255,0.15);color:white}
+.pop-label{
+  font-size:10px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold2);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;
+}
+.pop-label::before{content:'';width:22px;height:1px;background:var(--gold2)}
+.pop-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(24px,3vw,32px);font-weight:600;
+  color:var(--cream);line-height:1.15;letter-spacing:-.01em;
+}
+.pop-title em{font-style:italic;color:var(--gold2)}
+.pop-sub{font-size:13px;color:rgba(247,242,234,.42);margin-top:10px;line-height:1.65}
+.pop-body{padding:32px 44px 36px}
+.pop-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pop-field{margin-bottom:14px}
+.pop-field label{
+  display:block;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px;
+}
+.pop-field input,.pop-field select{
+  width:100%;padding:12px 14px;
+  background:white;border:1px solid var(--border);
+  border-radius:4px;color:var(--charcoal);
+  font-family:'Outfit',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+.pop-field input:focus,.pop-field select:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,144,42,.1);
+}
+.pop-field input::placeholder{color:rgba(122,106,90,.45)}
+.pop-btn{
+  width:100%;padding:14px;margin-top:4px;
+  background:var(--gold);border:none;border-radius:4px;
+  color:white;font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:background .2s,transform .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.pop-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.pop-skip{
+  text-align:center;margin-top:14px;
+  font-size:12px;color:var(--muted);cursor:pointer;
+}
+.pop-skip span{text-decoration:underline;transition:color .2s}
+.pop-skip:hover span{color:var(--charcoal)}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 60px;
+  background:rgba(250,247,242,.92);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+nav.scrolled{box-shadow:0 2px 28px rgba(26,23,20,.07)}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;
+  color:var(--charcoal);cursor:pointer;
+  display:flex;align-items:center;letter-spacing:.01em;
+}
+.logo-dot{color:var(--gold);font-size:30px;line-height:0;margin-top:3px;margin-left:1px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nl{
+  padding:8px 16px;border-radius:4px;
+  font-size:13px;font-weight:500;letter-spacing:.03em;
+  color:var(--muted);background:none;border:none;
+  font-family:'Outfit',sans-serif;cursor:pointer;
+  transition:color .2s,background .2s;
+}
+.nl:hover,.nl.on{color:var(--charcoal);background:rgba(26,23,20,.05)}
+.nav-btn{
+  background:var(--charcoal);color:var(--cream);
+  padding:10px 24px;border-radius:4px;
+  font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  border:none;font-family:'Outfit',sans-serif;cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.nav-btn:hover{background:var(--brown);transform:translateY(-1px)}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.hbg span{display:block;width:22px;height:1.5px;background:var(--charcoal);transition:all .3s;border-radius:2px}
+
+/* ─── MOBILE MENU ─── */
+.mob-menu{
+  display:none;position:fixed;inset:0;top:var(--nav-h);
+  background:rgba(250,247,242,.98);backdrop-filter:blur(20px);
+  z-index:190;flex-direction:column;align-items:center;
+  justify-content:center;gap:6px;padding:40px;
+}
+.mob-menu.open{display:flex}
+.mob-link{
+  font-size:32px;font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-style:italic;color:var(--charcoal);
+  padding:10px;cursor:pointer;background:none;border:none;
+  transition:color .2s;
+}
+.mob-link:hover{color:var(--brown)}
+.mob-cta{
+  margin-top:24px;background:var(--charcoal);color:var(--cream);
+  padding:16px 48px;border-radius:4px;
+  font-size:13px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+}
+
+/* ─── PAGE SYSTEM ─── */
+.page{display:none;min-height:calc(100vh - var(--nav-h));padding-top:var(--nav-h)}
+.page.active{display:block}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.page.active .a1{animation:fadeUp .65s ease both .06s}
+.page.active .a2{animation:fadeUp .65s ease both .16s}
+.page.active .a3{animation:fadeUp .65s ease both .26s}
+.page.active .a4{animation:fadeUp .65s ease both .36s}
+.page.active .a5{animation:fadeUp .65s ease both .46s}
+
+/* ─── SHARED ELEMENTS ─── */
+.chip{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:18px;
+}
+.chip::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+.display{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,5.8vw,84px);font-weight:600;
+  line-height:1.0;letter-spacing:-.025em;color:var(--charcoal);
+}
+.title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,4vw,58px);font-weight:600;
+  line-height:1.05;letter-spacing:-.02em;color:var(--charcoal);
+}
+.sub-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:600;line-height:1.2;color:var(--charcoal);
+}
+em.warm{font-style:italic;color:var(--brown)}
+.body-lg{font-size:17px;line-height:1.85;color:var(--muted)}
+.body-md{font-size:15px;line-height:1.8;color:var(--muted)}
+.body-sm{font-size:13px;line-height:1.75;color:var(--muted)}
+.btn-dark{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--charcoal);color:var(--cream);
+  padding:14px 32px;border-radius:4px;
+  font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  transition:background .2s,transform .15s;text-decoration:none;
+}
+.btn-dark:hover{background:var(--brown);transform:translateY(-2px)}
+.btn-dark::after{content:'→';font-size:14px;transition:transform .2s}
+.btn-dark:hover::after{transform:translateX(5px)}
+.btn-gold{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:white;
+  padding:14px 32px;border-radius:4px;
+  font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  transition:background .2s,transform .15s;
+}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-gold::after{content:'→';font-size:14px;transition:transform .2s}
+.btn-gold:hover::after{transform:translateX(5px)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--charcoal);
+  padding:14px 30px;border-radius:4px;
+  border:1px solid rgba(26,23,20,.18);
+  font-size:12px;font-weight:500;letter-spacing:.04em;
+  cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:border-color .2s,background .2s;
+}
+.btn-outline:hover{border-color:var(--brown);background:rgba(92,61,46,.04)}
+.rule{width:100%;height:1px;background:var(--border)}
+
+/* ─── GUARANTEE STRIP ─── */
+.g-strip{
+  background:var(--charcoal);
+  padding:22px 60px;
+  display:flex;align-items:center;justify-content:center;
+  gap:18px;flex-wrap:wrap;text-align:center;
+}
+.g-strip-icon{font-size:18px}
+.g-strip-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(18px,2.2vw,26px);font-weight:600;
+  color:var(--cream);line-height:1.2;
+}
+.g-strip-text em{font-style:italic;color:var(--gold2)}
+.g-strip-note{font-size:12px;color:rgba(247,242,234,.35);margin-left:6px;font-style:italic}
+
+/* ─── HOME ─── */
+.hero{
+  min-height:calc(100vh - var(--nav-h) - 68px);
+  display:grid;grid-template-columns:1fr 420px;
+  align-items:center;position:relative;
+}
+.hero::after{
+  content:'';position:absolute;
+  right:0;top:0;bottom:0;width:420px;
+  background:var(--cream2);z-index:-1;
+}
+.hero-l{padding:80px 60px 80px 60px}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(200,144,42,.1);border:1px solid rgba(200,144,42,.2);
+  padding:7px 16px;border-radius:20px;margin-bottom:32px;
+}
+.hero-eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 2.5s ease infinite}
+.hero-eyebrow span{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.hero-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(54px,6.2vw,90px);font-weight:600;
+  line-height:1.0;letter-spacing:-.03em;margin-bottom:26px;
+}
+.hero-h span{display:block}
+.hero-h em{font-style:italic;color:var(--brown)}
+.hero-sub{font-size:17px;line-height:1.85;color:var(--muted);max-width:440px;margin-bottom:44px}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hero-trust{
+  display:flex;align-items:center;gap:16px;
+  margin-top:44px;padding-top:36px;border-top:1px solid var(--border);
+}
+.ht-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.ht-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(200,144,42,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.ht-sep{width:1px;height:20px;background:var(--border)}
+.hero-r{
+  padding:60px 40px;display:flex;flex-direction:column;
+  justify-content:center;gap:12px;position:relative;
+}
+.hero-badge{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:white;
+  padding:9px 22px;border-radius:4px;
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;
+}
+.h-card{
+  background:white;border:1px solid var(--border);
+  border-radius:6px;padding:22px 24px;
+  display:flex;gap:16px;align-items:flex-start;
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.h-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,23,20,.08)}
+.h-card-icon{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(200,144,42,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+}
+.h-card-title{font-size:14px;font-weight:600;color:var(--charcoal);margin-bottom:5px}
+.h-card-desc{font-size:12px;line-height:1.65;color:var(--muted)}
+
+/* ─── WHO WE HELP ─── */
+.who-section{padding:100px 60px;background:var(--cream2)}
+.who-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:52px;
+}
+.who-card{
+  background:white;border:1px solid var(--border);
+  border-radius:6px;padding:36px 30px;
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.who-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(26,23,20,.07)}
+.wc-icon{font-size:26px;margin-bottom:18px}
+.wc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;color:var(--charcoal);margin-bottom:10px;
+}
+.wc-desc{font-size:13px;line-height:1.75;color:var(--muted)}
+
+/* ─── HOW IT WORKS ─── */
+.how-section{background:var(--charcoal);padding:100px 60px}
+.how-section .chip{color:var(--gold2)}
+.how-section .chip::before{background:var(--gold2)}
+.how-section .title{color:var(--cream)}
+.how-section em.warm{color:var(--gold2)}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:60px;
+  border:1px solid rgba(255,255,255,.06);
+}
+.step{
+  padding:40px 32px;border-right:1px solid rgba(255,255,255,.06);
+  transition:background .2s;
+}
+.step:last-child{border-right:none}
+.step:hover{background:rgba(255,255,255,.03)}
+.step-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:300;
+  color:rgba(200,144,42,.25);line-height:1;margin-bottom:18px;
+}
+.step-title{font-size:15px;font-weight:600;color:var(--cream);margin-bottom:10px}
+.step-desc{font-size:13px;line-height:1.75;color:rgba(247,242,234,.42)}
+
+/* ─── TRUST SECTION ─── */
+.trust-section{padding:100px 60px;background:var(--warm)}
+.trust-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin-top:56px;
+}
+.trust-card{
+  background:white;border:1px solid var(--border);
+  border-radius:6px;padding:32px 28px;
+  display:flex;gap:20px;align-items:flex-start;
+  transition:background .2s;
+}
+.trust-card:hover{background:var(--cream2)}
+.tc-icon{
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(200,144,42,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.tc-title{font-size:15px;font-weight:600;color:var(--charcoal);margin-bottom:7px}
+.tc-desc{font-size:13px;line-height:1.72;color:var(--muted)}
+
+/* ─── HOME CTA ─── */
+.home-cta{
+  background:var(--cream2);padding:100px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:48px;flex-wrap:wrap;
+}
+
+/* ─── SERVICES PAGE ─── */
+.svc-hero{
+  padding:96px 60px 72px;background:var(--cream2);
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;
+}
+.svc-list{padding:0 60px 100px;display:flex;flex-direction:column;gap:0}
+.svc-item{
+  background:var(--warm);padding:56px 56px;
+  display:grid;grid-template-columns:1fr 320px;gap:60px;
+  align-items:start;border-bottom:1px solid var(--border);
+  transition:background .25s;
+}
+.svc-item:last-child{border-bottom:none}
+.svc-item:hover{background:white}
+.svc-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:60px;font-weight:300;
+  color:rgba(200,144,42,.2);line-height:1;margin-bottom:6px;
+}
+.svc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:600;color:var(--charcoal);margin-bottom:14px;
+}
+.svc-desc{font-size:14px;line-height:1.82;color:var(--muted);margin-bottom:28px}
+.svc-list-items{list-style:none;display:flex;flex-direction:column;gap:10px}
+.svc-list-items li{
+  font-size:13px;color:var(--muted);
+  display:flex;align-items:center;gap:12px;
+}
+.svc-list-items li::before{
+  content:'';width:18px;height:1px;background:var(--gold);flex-shrink:0;
+}
+.svc-panel{
+  background:var(--cream2);border-radius:6px;border:1px solid var(--border);
+  padding:32px 28px;display:flex;flex-direction:column;gap:16px;
+}
+.svc-panel-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--charcoal);line-height:1.25;
+}
+.svc-panel-sub{font-size:13px;line-height:1.72;color:var(--muted)}
+
+/* ─── ABOUT PAGE ─── */
+.about-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:calc(100vh - var(--nav-h));
+}
+.about-l{
+  background:var(--cream2);padding:96px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.about-r{
+  background:var(--charcoal);padding:96px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.about-r .title{color:var(--cream)}
+.about-r em.warm{color:var(--gold2)}
+.about-r .body-md{color:rgba(247,242,234,.48)}
+.vals{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:44px}
+.val{
+  background:white;border:1px solid var(--border);
+  border-radius:6px;padding:24px 20px;
+}
+.val-icon{font-size:20px;margin-bottom:10px}
+.val-title{font-size:14px;font-weight:600;color:var(--charcoal);margin-bottom:6px}
+.val-desc{font-size:12px;line-height:1.7;color:var(--muted)}
+.about-nums{
+  display:flex;gap:36px;margin-top:52px;padding-top:40px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.an-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;font-weight:700;color:var(--gold2);line-height:1;display:block;
+}
+.an-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:rgba(247,242,234,.32);margin-top:5px}
+
+/* ─── EXPERTISE PAGE ─── */
+.exp-hero{padding:96px 60px 72px;background:var(--cream2)}
+.exp-grid{
+  padding:0 60px;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-bottom:0;
+}
+.exp-card{
+  background:white;border:1px solid var(--border);
+  border-radius:6px;padding:36px 30px;
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.exp-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(26,23,20,.07)}
+.ec-icon{font-size:28px;margin-bottom:16px}
+.ec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;color:var(--charcoal);margin-bottom:10px;
+}
+.ec-desc{font-size:13px;line-height:1.75;color:var(--muted)}
+.exp-cta{
+  margin:40px 60px 96px;background:var(--charcoal);
+  border-radius:6px;padding:52px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:40px;flex-wrap:wrap;
+}
+.exp-cta-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,2.8vw,34px);font-weight:600;
+  color:var(--cream);line-height:1.2;max-width:520px;
+}
+.exp-cta-text em{font-style:italic;color:var(--gold2)}
+
+/* ─── CONTACT PAGE ─── */
+.contact-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:calc(100vh - var(--nav-h));
+}
+.contact-l{
+  background:var(--cream2);padding:96px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.contact-r{
+  background:var(--charcoal);padding:96px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.c-detail{display:flex;gap:16px;align-items:flex-start;margin-bottom:26px}
+.c-icon{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(200,144,42,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;margin-top:2px;
+}
+.c-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.c-val{font-size:15px;font-weight:500;color:var(--charcoal)}
+.c-val a{color:var(--charcoal);text-decoration:none;transition:color .2s}
+.c-val a:hover{color:var(--gold)}
+.f-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:600;color:var(--cream);margin-bottom:8px;
+}
+.f-sub{font-size:14px;color:rgba(247,242,234,.38);margin-bottom:32px;line-height:1.65}
+.f-row{margin-bottom:16px}
+.f-row label{
+  display:block;font-size:10px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(247,242,234,.32);margin-bottom:8px;
+}
+.f-row input,.f-row select,.f-row textarea{
+  width:100%;padding:13px 16px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:4px;color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s,background .2s;
+  -webkit-appearance:none;
+}
+.f-row input:focus,.f-row select:focus,.f-row textarea:focus{
+  border-color:var(--gold);background:rgba(255,255,255,.08);
+}
+.f-row input::placeholder,.f-row textarea::placeholder{color:rgba(255,255,255,.16)}
+.f-row select option{background:#1A1714;color:var(--cream)}
+.f-row textarea{resize:vertical;min-height:108px}
+.f-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-submit{
+  width:100%;padding:15px;background:var(--gold);
+  border:none;border-radius:4px;color:white;
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:6px;
+  transition:background .2s,transform .15s;
+}
+.f-submit:hover{background:var(--gold2);transform:translateY(-1px)}
+.f-success{
+  display:none;margin-top:14px;padding:18px 20px;
+  background:rgba(45,122,79,.14);border:1px solid rgba(45,122,79,.28);
+  border-radius:4px;color:#6FCF97;font-size:13px;font-weight:500;text-align:center;
+}
+
+/* ─── FLOATING BUTTON ─── */
+.fab{
+  position:fixed;bottom:28px;right:28px;z-index:300;
+  background:var(--gold);color:white;
+  padding:13px 24px;border-radius:4px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  box-shadow:0 6px 28px rgba(200,144,42,.38);
+  display:flex;align-items:center;gap:9px;
+  transition:transform .2s,background .2s;
+}
+.fab:hover{transform:translateY(-3px);background:var(--gold2)}
+.fab-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.65);
+  animation:pulse 2.2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+
+/* ─── FOOTER ─── */
+footer{
+  background:#100E0C;padding:52px 60px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:24px;
+  border-top:1px solid rgba(255,255,255,.04);
+}
+.f-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--cream);
+  display:flex;align-items:center;cursor:pointer;
+}
+.f-logo-dot{color:var(--gold);font-size:26px}
+.f-nav{display:flex;gap:28px;flex-wrap:wrap}
+.f-nl{
+  font-size:12px;color:rgba(255,255,255,.28);
+  background:none;border:none;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:color .2s;
+}
+.f-nl:hover{color:var(--gold)}
+.f-copy{font-size:11px;color:rgba(255,255,255,.18)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:960px){
+  nav{padding:0 24px}
+  .nav-links,.nav-btn{display:none}
+  .hbg{display:flex}
+  .g-strip,.who-section,.how-section,.trust-section,.home-cta,.svc-hero,.exp-hero{padding:60px 24px}
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero::after{display:none}
+  .hero-l{padding:60px 24px 40px}
+  .hero-r{background:var(--cream2);padding:40px 24px}
+  .who-grid,.steps-grid,.trust-grid,.exp-grid,.vals{grid-template-columns:1fr}
+  .steps-grid .step{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  .svc-list{padding:0 0 60px}
+  .svc-item{grid-template-columns:1fr;padding:40px 24px}
+  .about-split,.contact-split{grid-template-columns:1fr}
+  .about-l,.about-r,.contact-l,.contact-r{padding:60px 24px}
+  .about-nums{gap:24px}
+  .exp-grid{grid-template-columns:1fr 1fr;padding:0 24px}
+  .exp-cta{margin:24px 24px 60px;padding:36px 28px}
+  .f-2col{grid-template-columns:1fr}
+  footer{padding:36px 24px;flex-direction:column;text-align:center}
+  .fab{bottom:16px;right:16px}
+}
+@media(max-width:600px){
+  .exp-grid{grid-template-columns:1fr}
+  .hero-trust{flex-wrap:wrap;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── POPUP ─── -->
+<div class="pop-overlay" id="popOverlay">
+  <div class="pop-box">
+    <div class="pop-head">
+      <button class="pop-close" onclick="closePopup()">✕</button>
+      <div class="pop-label">Welcome to AG Automation</div>
+      <div class="pop-title">Let's see how we can help<br>your <em>business grow.</em></div>
+      <div class="pop-sub">Share a little about yourself — we'll get back to you personally within hours.</div>
+    </div>
+    <div class="pop-body">
+      <div class="pop-grid">
+        <div class="pop-field">
+          <label>Your name</label>
+          <input type="text" id="p-name" placeholder="First name">
+        </div>
+        <div class="pop-field">
+          <label>Email address</label>
+          <input type="email" id="p-email" placeholder="you@email.com">
+        </div>
+      </div>
+      <div class="pop-field">
+        <label>Type of business</label>
+        <select id="p-biz">
+          <option value="">Select your business type...</option>
+          <option>HVAC / Heating & Cooling</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>Painting / Renovation</option>
+          <option>Landscaping / Snow Removal</option>
+          <option>Restaurant / Cafe / Food</option>
+          <option>Cleaning Service</option>
+          <option>Retail / Shop</option>
+          <option>General Contracting</option>
+          <option>Newcomer &amp; community business</option>
+          <option>Other small business</option>
+        </select>
+      </div>
+      <button class="pop-btn" onclick="submitPopup()">
+        <span>Start the conversation</span>
+        <span style="font-size:15px">→</span>
+      </button>
+      <div class="pop-skip" onclick="closePopup()">I'll just browse for now — <span>skip</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <div class="logo" onclick="goTo('home')">AG Automation<span class="logo-dot">.</span></div>
+  <div class="nav-links">
+    <button class="nl on" onclick="goTo('home')" data-p="home">Home</button>
+    <button class="nl" onclick="goTo('services')" data-p="services">Services</button>
+    <button class="nl" onclick="goTo('about')" data-p="about">About Us</button>
+    <button class="nl" onclick="goTo('expertise')" data-p="expertise">Expertise</button>
+    <button class="nl" onclick="bookNow()" data-p="contact">Contact</button>
+  </div>
+  <button class="nav-btn" onclick="goTo('contact')">Free Consultation</button>
+  <div class="hbg" id="hbg" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ─── MOBILE MENU ─── -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-link" onclick="goTo('home');toggleMob()">Home</button>
+  <button class="mob-link" onclick="goTo('services');toggleMob()">Services</button>
+  <button class="mob-link" onclick="goTo('about');toggleMob()">About Us</button>
+  <button class="mob-link" onclick="goTo('expertise');toggleMob()">Expertise</button>
+  <button class="mob-link" onclick="goTo('contact');toggleMob()">Contact</button>
+  <button class="mob-cta" onclick="goTo('contact');toggleMob()">Book Free Consultation</button>
+</div>
+
+<!-- ─── FLOATING BUTTON ─── -->
+<button class="fab" onclick="bookNow()">
+  <div class="fab-dot"></div>Free Consultation
+</button>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Guarantee strip -->
+  <div class="g-strip">
+    <div class="g-strip-icon">🤝</div>
+    <div>
+      <span class="g-strip-text">You <em>only pay when you love</em> the result.</span>
+      <span class="g-strip-note">Not satisfied? You owe us nothing — ever.</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-l">
+      <div class="hero-eyebrow a1">
+        <div class="hero-eyebrow-dot"></div>
+        <span>Now welcoming new clients across Canada</span>
+      </div>
+      <h1 class="hero-h a2">
+        <span>Your business</span>
+        <span>deserves to</span>
+        <span>be <em>found.</em></span>
+      </h1>
+      <p class="hero-sub a3">We build websites, set up your Google presence, and automate your marketing — so new customers can find you online while you focus on what you do best.</p>
+      <div class="hero-actions a4">
+        <button class="btn-gold" onclick="bookNow()">Book Free Consultation</button>
+        <button class="btn-outline" onclick="goTo('services')">Explore Services</button>
+      </div>
+      <div class="hero-trust a5">
+        <div class="ht-item"><div class="ht-icon">✓</div>No payment until you're happy</div>
+        <div class="ht-sep"></div>
+        <div class="ht-item"><div class="ht-icon">⚡</div>Live in 5–7 days</div>
+        <div class="ht-sep"></div>
+        <div class="ht-item"><div class="ht-icon">🇨🇦</div>Serving all of Canada</div>
+      </div>
+    </div>
+    <div class="hero-r a5">
+      <div class="hero-badge">Accepting new clients</div>
+      <div class="h-card">
+        <div class="h-card-icon">🔧</div>
+        <div>
+          <div class="h-card-title">Trades & service companies</div>
+          <div class="h-card-desc">HVAC, electricians, plumbers, painters — we get you found when customers are searching right now.</div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-icon">🍽</div>
+        <div>
+          <div class="h-card-title">Restaurants & food businesses</div>
+          <div class="h-card-desc">Amazing food deserves to be discovered. We build the online presence that brings new tables in.</div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-icon">🌱</div>
+        <div>
+          <div class="h-card-title">New & growing entrepreneurs</div>
+          <div class="h-card-desc">Whatever stage you're at — we'll build the digital foundation your business needs to grow with confidence.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- Who we help -->
+  <div class="who-section">
+    <div class="chip a1">Who we serve</div>
+    <h2 class="title a2">Built for businesses<br>that <em class="warm">communities depend on.</em></h2>
+    <p class="body-lg a3" style="margin-top:16px;max-width:580px">We specialize in the hardworking, owner-operated businesses that big agencies overlook. Whether you're just starting out or have been running your business for years — we're here for you.</p>
+    <div class="who-grid a4">
+      <div class="who-card">
+        <div class="wc-icon">🔧</div>
+        <div class="wc-title">Trades & contractors</div>
+        <div class="wc-desc">HVAC, plumbers, electricians, roofers, painters — we make sure you show up when someone nearby is searching for your services, day or night.</div>
+      </div>
+      <div class="who-card">
+        <div class="wc-icon">🛍</div>
+        <div class="wc-title">Small business owners</div>
+        <div class="wc-desc">Owner-operated shops, service providers, and local businesses. You built something real — let's make sure people can find it online.</div>
+      </div>
+      <div class="who-card">
+        <div class="wc-icon">🌱</div>
+        <div class="wc-title">Newcomers & entrepreneurs</div>
+        <div class="wc-desc">You came here and built something remarkable. We help you compete online with the same tools that big businesses use — at a price that makes sense.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-section">
+    <div class="chip a1">How it works</div>
+    <h2 class="title a2">From invisible to <em class="warm">online</em> in days, not months.</h2>
+    <div class="steps-grid a3">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Free consultation</div>
+        <div class="step-desc">30 minutes. We audit your current online presence, find exactly what's missing, and walk you through what we'd build — at no charge.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">We build everything</div>
+        <div class="step-desc">Website, Google listing, automation — you give us the go-ahead and we handle the rest. No technical knowledge required from you.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">You approve — or walk away free</div>
+        <div class="step-desc">Review the work. Love it, and we proceed. Not satisfied? You owe us absolutely nothing. No pressure, no contracts, no risk.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">We keep it running</div>
+        <div class="step-desc">Monthly updates, maintenance, and monitoring. You run your business — we keep your digital presence sharp and working hard for you.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why trust us -->
+  <div class="trust-section">
+    <div class="chip a1">Why choose us</div>
+    <h2 class="title a2">We do things <em class="warm">differently.</em></h2>
+    <p class="body-lg a3" style="margin-top:16px;max-width:560px">No hidden fees. No confusing jargon. No long contracts. Just honest work, delivered fast, with your satisfaction guaranteed.</p>
+    <div class="trust-grid a4">
+      <div class="trust-card">
+        <div class="tc-icon">🤝</div>
+        <div>
+          <div class="tc-title">100% satisfaction guarantee</div>
+          <div class="tc-desc">You only pay when you genuinely love the result. If you're not happy — for any reason — you walk away free. No questions asked.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon">⚡</div>
+        <div>
+          <div class="tc-title">Delivered in days, not months</div>
+          <div class="tc-desc">Most agencies take 6–8 weeks to launch a website. We're live in 5–7 business days. Your business starts growing faster.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon">💬</div>
+        <div>
+          <div class="tc-title">Plain language, always</div>
+          <div class="tc-desc">No confusing tech talk. We explain everything clearly in language you understand, at every step of the process.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon">🌍</div>
+        <div>
+          <div class="tc-title">Multilingual & culturally aware</div>
+          <div class="tc-desc">We serve clients from every background across Canada. Language is never a barrier — we're here to help every business owner succeed.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon">📈</div>
+        <div>
+          <div class="tc-title">Real results, not vanity metrics</div>
+          <div class="tc-desc">We measure success in actual customers calling you and finding your business — not abstract numbers that don't pay your bills.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="tc-icon">🧑‍💼</div>
+        <div>
+          <div class="tc-title">One dedicated contact</div>
+          <div class="tc-desc">No being passed around a call centre. You have one person who knows your business and is always available to help.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="home-cta">
+    <div>
+      <div class="chip a1">Ready to grow?</div>
+      <h2 class="title a2">Let's get your business <em class="warm">found.</em></h2>
+      <p class="body-lg a3" style="margin-top:14px;max-width:440px">Free consultation. No commitment. And remember — you only pay when you love the result.</p>
+    </div>
+    <div class="a4">
+      <button class="btn-dark" style="font-size:13px;padding:18px 44px" onclick="bookNow()">Book Your Free Consultation</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-logo" onclick="goTo('home')">AG Automation<span class="f-logo-dot">.</span></div>
+    <div class="f-nav">
+      <button class="f-nl" onclick="goTo('services')">Services</button>
+      <button class="f-nl" onclick="goTo('about')">About</button>
+      <button class="f-nl" onclick="goTo('expertise')">Expertise</button>
+      <button class="f-nl" onclick="bookNow()">Contact</button>
+    </div>
+    <div class="f-copy">© 2025 AG Automation · Serving businesses across Canada</div>
+  </footer>
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<div class="page" id="page-services">
+  <div class="g-strip">
+    <div class="g-strip-icon">🤝</div>
+    <div><span class="g-strip-text">You <em>only pay when you love</em> the result.</span></div>
+  </div>
+
+  <div class="svc-hero">
+    <div>
+      <div class="chip a1">What we offer</div>
+      <h1 class="display a2">Services that<br><em class="warm">move the needle.</em></h1>
+    </div>
+    <div>
+      <p class="body-lg a3">Everything we build is designed around one goal — more customers finding your business. Simple, honest, and risk-free: you only pay when you're satisfied.</p>
+    </div>
+  </div>
+
+  <div class="svc-list">
+    <div class="svc-item">
+      <div>
+        <div class="svc-num a1">01</div>
+        <div class="svc-title a2">Website Design & Build</div>
+        <div class="svc-desc a3">A professional, mobile-ready website that looks great and works hard for your business. Built in under a week, custom to your brand — not a template anyone else is using.</div>
+        <ul class="svc-list-items a4">
+          <li>5-page fully custom website</li>
+          <li>Mobile-first, fast-loading design</li>
+          <li>Contact form & Google Maps embed</li>
+          <li>Menu, services, or portfolio section</li>
+          <li>Live within 5–7 business days</li>
+          <li>Free revisions until you love it</li>
+        </ul>
+      </div>
+      <div class="svc-panel a5">
+        <div class="svc-panel-title">Ready to see what your site could look like?</div>
+        <div class="svc-panel-sub">Book a free consultation. We'll show you a draft based on your real business — no charge, no obligation, no pressure.</div>
+        <button class="btn-gold" onclick="bookNow()">Book Free Consultation</button>
+      </div>
+    </div>
+
+    <div class="svc-item">
+      <div>
+        <div class="svc-num a1">02</div>
+        <div class="svc-title a2">Google & Online Presence Setup</div>
+        <div class="svc-desc a3">Most businesses have a broken or unclaimed Google listing. We fix it, optimize it, and get you showing up when nearby customers are searching. Done right, this alone brings in new customers every week.</div>
+        <ul class="svc-list-items a4">
+          <li>Google Business Profile setup & optimization</li>
+          <li>Correct phone, hours, photos, description</li>
+          <li>Local Google Maps ranking strategy</li>
+          <li>Review collection system setup</li>
+          <li>Monthly monitoring & updates</li>
+        </ul>
+      </div>
+      <div class="svc-panel a5">
+        <div class="svc-panel-title">Find out how visible your business is right now.</div>
+        <div class="svc-panel-sub">In your free consultation we do a live audit of your Google presence and show you exactly what customers currently see.</div>
+        <button class="btn-gold" onclick="bookNow()">Book Free Consultation</button>
+      </div>
+    </div>
+
+    <div class="svc-item">
+      <div>
+        <div class="svc-num a1">03</div>
+        <div class="svc-title a2">Marketing Automation & Lead Follow-Up</div>
+        <div class="svc-desc a3">When you miss a call, that customer moves on. We set up systems that automatically text back missed callers, follow up with leads, and request reviews after every job — running 24/7 without you touching anything.</div>
+        <ul class="svc-list-items a4">
+          <li>Missed-call auto text-back system</li>
+          <li>Lead capture with instant notifications</li>
+          <li>Automated review request after each job</li>
+          <li>Monthly performance reporting</li>
+          <li>Fully managed — zero effort from you</li>
+        </ul>
+      </div>
+      <div class="svc-panel a5">
+        <div class="svc-panel-title">How many leads are slipping through right now?</div>
+        <div class="svc-panel-sub">Let's find out together. A free 30-minute call is all it takes to see exactly what this could recover for your business.</div>
+        <button class="btn-gold" onclick="bookNow()">Book Free Consultation</button>
+      </div>
+    </div>
+
+    <div class="svc-item" style="background:var(--cream2)">
+      <div>
+        <div class="svc-num a1" style="color:rgba(200,144,42,.45)">★</div>
+        <div class="svc-title a2">Full Growth Bundle</div>
+        <div class="svc-desc a3">All three services working together — website, Google presence, and automation. Everything your business needs to compete online, managed by one dedicated team with one point of contact.</div>
+        <ul class="svc-list-items a4">
+          <li>Everything in all three services</li>
+          <li>Priority build with faster turnaround</li>
+          <li>Monthly strategy check-in call</li>
+          <li>One dedicated contact — always responsive</li>
+          <li>You only pay when you're completely satisfied</li>
+        </ul>
+      </div>
+      <div class="svc-panel a5" style="background:var(--charcoal);border-color:transparent">
+        <div class="svc-panel-title" style="color:var(--cream)">The complete package for businesses that are serious about growth.</div>
+        <div class="svc-panel-sub" style="color:rgba(247,242,234,.42)">Tell us about your business. We'll walk you through exactly what we'd build — all in one free, no-pressure conversation.</div>
+        <button class="btn-gold" onclick="bookNow()">Book Free Consultation</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-logo" onclick="goTo('home')">AG Automation<span class="f-logo-dot">.</span></div>
+    <div class="f-nav">
+      <button class="f-nl" onclick="goTo('home')">Home</button>
+      <button class="f-nl" onclick="goTo('about')">About</button>
+      <button class="f-nl" onclick="goTo('expertise')">Expertise</button>
+      <button class="f-nl" onclick="bookNow()">Contact</button>
+    </div>
+    <div class="f-copy">© 2025 AG Automation · Serving businesses across Canada</div>
+  </footer>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div class="page" id="page-about">
+  <div class="about-split">
+    <div class="about-l">
+      <div class="chip a1">Who we are</div>
+      <h1 class="display a2">Digital experts<br>who <em class="warm">genuinely care.</em></h1>
+      <p class="body-md a3" style="margin-top:24px;margin-bottom:22px">AG Automation was built on one belief: every business — no matter how new, how small, or where they come from — deserves a professional digital presence.</p>
+      <p class="body-md a4" style="margin-bottom:36px">We bring deep expertise in web design, Google optimization, and marketing automation, and we apply it where it's needed most: the hardworking, owner-operated businesses that keep communities going.</p>
+      <button class="btn-dark a5" onclick="bookNow()">Work with us</button>
+
+      <div class="vals">
+        <div class="val a1">
+          <div class="val-icon">🤝</div>
+          <div class="val-title">Zero risk, always</div>
+          <div class="val-desc">You only pay when you love the result. Our guarantee isn't fine print — it's how we do business.</div>
+        </div>
+        <div class="val a2">
+          <div class="val-icon">⚡</div>
+          <div class="val-title">Fast & reliable</div>
+          <div class="val-desc">Websites live in 5–7 days. We move quickly because your business shouldn't have to wait.</div>
+        </div>
+        <div class="val a3">
+          <div class="val-icon">🌍</div>
+          <div class="val-title">Welcoming to all</div>
+          <div class="val-desc">We work with business owners from every background. Everyone deserves a fair shot at success online.</div>
+        </div>
+        <div class="val a4">
+          <div class="val-icon">📈</div>
+          <div class="val-title">Results that matter</div>
+          <div class="val-desc">We measure success in real customers and real calls — not dashboards that don't pay your rent.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-r">
+      <div class="chip a1" style="color:var(--gold2)"><span style="background:var(--gold2);width:28px;height:1px;display:inline-block;margin-right:10px;vertical-align:middle"></span>Our mission</div>
+      <h2 class="title a2">Every business owner deserves a <em class="warm">level playing field</em> online.</h2>
+      <p class="body-md a3" style="margin-top:24px;margin-bottom:20px">Canada is full of extraordinary businesses run by people who work incredibly hard. The tradesperson who shows up at midnight. The restaurant owner who's been perfecting their craft for years. The entrepreneur who started with very little and built something the whole community relies on.</p>
+      <p class="body-md a4" style="margin-bottom:20px">Too many of those businesses are invisible online — not because they don't have something worth finding, but because the tools and knowledge weren't accessible to them. Big agencies were too expensive. DIY was too complicated. And nobody took the time to actually help.</p>
+      <p class="body-md a5" style="margin-bottom:36px">AG Automation exists to change that. We bring professional-grade digital marketing directly to the businesses that need it most — with clear communication, fair pricing, and a guarantee that means you never take a financial risk with us.</p>
+      <button class="btn-gold a5" onclick="bookNow()">Start with a free consultation</button>
+      <div class="about-nums">
+        <div><span class="an-val">100%</span><span class="an-lbl">Satisfaction guarantee</span></div>
+        <div><span class="an-val">7</span><span class="an-lbl">Days avg. launch</span></div>
+        <div><span class="an-val">🇨🇦</span><span class="an-lbl">All of Canada</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-logo" onclick="goTo('home')">AG Automation<span class="f-logo-dot">.</span></div>
+    <div class="f-nav">
+      <button class="f-nl" onclick="goTo('home')">Home</button>
+      <button class="f-nl" onclick="goTo('services')">Services</button>
+      <button class="f-nl" onclick="goTo('expertise')">Expertise</button>
+      <button class="f-nl" onclick="bookNow()">Contact</button>
+    </div>
+    <div class="f-copy">© 2025 AG Automation · Serving businesses across Canada</div>
+  </footer>
+</div>
+
+<!-- ══════════ EXPERTISE ══════════ -->
+<div class="page" id="page-expertise">
+  <div class="exp-hero">
+    <div class="chip a1">Our expertise</div>
+    <h1 class="display a2">Deep skills.<br><em class="warm">Real results.</em></h1>
+    <p class="body-lg a3" style="margin-top:20px;max-width:600px">We bring hands-on expertise across every tool your business needs to grow online. No guesswork — just proven methods applied by people who know what they're doing.</p>
+  </div>
+
+  <div class="exp-grid" style="margin-bottom:40px">
+    <div class="exp-card a1">
+      <div class="ec-icon">🌐</div>
+      <div class="ec-title">Website design & build</div>
+      <div class="ec-desc">Custom, mobile-first websites built from scratch. Fast-loading, beautifully designed, and built to convert visitors into real customers — not just look pretty.</div>
+    </div>
+    <div class="exp-card a2">
+      <div class="ec-icon">📍</div>
+      <div class="ec-title">Google Business & local SEO</div>
+      <div class="ec-desc">We know exactly how Google's local algorithm works. We optimize your listing, build citations, and get you showing up when customers nearby are actively searching for your service.</div>
+    </div>
+    <div class="exp-card a3">
+      <div class="ec-icon">⚙️</div>
+      <div class="ec-title">Marketing automation</div>
+      <div class="ec-desc">Missed-call text-back, automated follow-ups, lead capture, review requests — systems that work for you 24/7 so you never lose a lead to a missed call again.</div>
+    </div>
+    <div class="exp-card a1">
+      <div class="ec-icon">🛒</div>
+      <div class="ec-title">Online booking & ordering</div>
+      <div class="ec-desc">For restaurants, service businesses, and retailers — seamless online booking and inquiry systems that work beautifully on any device and drive real revenue.</div>
+    </div>
+    <div class="exp-card a2">
+      <div class="ec-icon">📱</div>
+      <div class="ec-title">Social media presence</div>
+      <div class="ec-desc">Consistent, professional branding across Instagram, Facebook, and Google. We set up your profiles and connect them to your website for a unified online presence.</div>
+    </div>
+    <div class="exp-card a3">
+      <div class="ec-icon">🌍</div>
+      <div class="ec-title">Multilingual support</div>
+      <div class="ec-desc">We serve business owners from every background across Canada. We understand the unique challenges of building a customer base and communicate clearly in the language that works best for you.</div>
+    </div>
+  </div>
+
+  <div class="exp-cta">
+    <div class="exp-cta-text">We're <em>building our portfolio</em> — and your business could be our next success story.</div>
+    <button class="btn-gold" style="white-space:nowrap;padding:16px 36px;font-size:12px" onclick="bookNow()">Be one of our first clients</button>
+  </div>
+
+  <footer>
+    <div class="f-logo" onclick="goTo('home')">AG Automation<span class="f-logo-dot">.</span></div>
+    <div class="f-nav">
+      <button class="f-nl" onclick="goTo('home')">Home</button>
+      <button class="f-nl" onclick="goTo('services')">Services</button>
+      <button class="f-nl" onclick="goTo('about')">About</button>
+      <button class="f-nl" onclick="bookNow()">Contact</button>
+    </div>
+    <div class="f-copy">© 2025 AG Automation · Serving businesses across Canada</div>
+  </footer>
+</div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-split">
+    <div class="contact-l">
+      <div class="chip a1">Get in touch</div>
+      <h1 class="title a2">Book your<br>free <em class="warm">consultation.</em></h1>
+      <p class="body-md a3" style="margin:20px 0 44px;max-width:400px">30 minutes. We review your online presence, identify every gap, and show you exactly what we'd build. No commitment. No pressure. And you only pay if you love the result.</p>
+
+      <div class="c-detail a4">
+        <div class="c-icon">✉️</div>
+        <div>
+          <div class="c-lbl">Email</div>
+          <div class="c-val"><a href="mailto:agautomationteam@gmail.com">agautomationteam@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="c-detail a4">
+        <div class="c-icon">📍</div>
+        <div>
+          <div class="c-lbl">Location</div>
+          <div class="c-val">Canada — serving businesses nationwide</div>
+        </div>
+      </div>
+      <div class="c-detail a5">
+        <div class="c-icon">🕐</div>
+        <div>
+          <div class="c-lbl">Response time</div>
+          <div class="c-val">Within a few hours — same day</div>
+        </div>
+      </div>
+      <div class="c-detail a5">
+        <div class="c-icon">🌍</div>
+        <div>
+          <div class="c-lbl">Languages</div>
+          <div class="c-val">English · Multilingual support available</div>
+        </div>
+      </div>
+      <div class="c-detail a5">
+        <div class="c-icon">🤝</div>
+        <div>
+          <div class="c-lbl">Our guarantee</div>
+          <div class="c-val">You only pay when you love the work</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-r">
+      <div class="f-title a1">Send us a message</div>
+      <div class="f-sub a2">Fill in the form — we'll be back in touch within a few hours.</div>
+
+      <div class="f-2col a3">
+        <div class="f-row">
+          <label>First name</label>
+          <input type="text" placeholder="Your first name" id="c-fname">
+        </div>
+        <div class="f-row">
+          <label>Last name</label>
+          <input type="text" placeholder="Your last name">
+        </div>
+      </div>
+      <div class="f-row a3">
+        <label>Email address</label>
+        <input type="email" placeholder="your@email.com">
+      </div>
+      <div class="f-row a4">
+        <label>Type of business</label>
+        <select>
+          <option value="">Select your business type...</option>
+          <option>HVAC / Heating & Cooling</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>Painting / Renovation</option>
+          <option>Landscaping / Snow Removal</option>
+          <option>Restaurant / Cafe / Food</option>
+          <option>Cleaning Service</option>
+          <option>General Contracting</option>
+          <option>Retail / Shop</option>
+          <option>Newcomer & community business</option>
+          <option>Other small business</option>
+        </select>
+      </div>
+      <div class="f-row a4">
+        <label>What do you need help with?</label>
+        <select>
+          <option value="">Select a service...</option>
+          <option>Website Design & Build</option>
+          <option>Google & Online Presence Setup</option>
+          <option>Marketing Automation</option>
+          <option>Full Growth Bundle (everything)</option>
+          <option>Not sure — I need advice</option>
+        </select>
+      </div>
+      <div class="f-row a5">
+        <label>Message (optional)</label>
+        <textarea placeholder="Tell us about your business and what you're looking to achieve..."></textarea>
+      </div>
+      <button class="f-submit a5" onclick="submitContact()">Book My Free Consultation →</button>
+      <div class="f-success" id="f-success">✓ Your booking calendar is opening! We look forward to speaking with you at agautomationteam@gmail.com</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f-logo" onclick="goTo('home')">AG Automation<span class="f-logo-dot">.</span></div>
+    <div class="f-nav">
+      <button class="f-nl" onclick="goTo('home')">Home</button>
+      <button class="f-nl" onclick="goTo('services')">Services</button>
+      <button class="f-nl" onclick="goTo('about')">About</button>
+      <button class="f-nl" onclick="goTo('expertise')">Expertise</button>
+    </div>
+    <div class="f-copy">© 2025 AG Automation · Serving businesses across Canada</div>
+  </footer>
+</div>
+
+<script>
+// ── CALENDLY BOOKING ──
+var CALENDLY_URL = 'https://calendly.com/agautomationteam/30min';
+function bookNow(){
+  window.open(CALENDLY_URL,'_blank');
+}
+
+// ── ROUTING ──
+function goTo(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nl').forEach(l=>l.classList.remove('on'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){
+    pg.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+    document.body.scrollTop=0;
+    document.documentElement.scrollTop=0;
+  }
+  const lk=document.querySelector('[data-p="'+name+'"]');
+  if(lk)lk.classList.add('on');
+  window.location.hash=name==='home'?'':name;
+}
+
+// ── POPUP ──
+function closePopup(){document.getElementById('popOverlay').classList.add('off')}
+function submitPopup(){
+  const n=document.getElementById('p-name').value.trim();
+  const e=document.getElementById('p-email').value.trim();
+  if(!n){document.getElementById('p-name').style.borderColor='#E24B4A';document.getElementById('p-name').focus();return}
+  if(!e){document.getElementById('p-email').style.borderColor='#E24B4A';document.getElementById('p-email').focus();return}
+  const btn=document.querySelector('.pop-btn');
+  btn.innerHTML='<span>Opening your booking...</span><span style="font-size:15px">→</span>';
+  btn.style.background='#2D7A4F';
+  setTimeout(()=>{closePopup();window.open(CALENDLY_URL,'_blank');},800);
+}
+setTimeout(()=>{
+  if(!sessionStorage.getItem('ag_pop')){
+    document.getElementById('popOverlay').classList.remove('off');
+    sessionStorage.setItem('ag_pop','1');
+  }
+},1200);
+
+// ── MOBILE MENU ──
+function toggleMob(){
+  const m=document.getElementById('mobMenu');
+  const h=document.getElementById('hbg');
+  m.classList.toggle('open');
+  const s=h.querySelectorAll('span');
+  if(m.classList.contains('open')){
+    s[0].style.transform='rotate(45deg) translate(4px,4px)';
+    s[1].style.opacity='0';
+    s[2].style.transform='rotate(-45deg) translate(4px,-4px)';
+  }else{s[0].style.transform='';s[1].style.opacity='';s[2].style.transform=''}
+}
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20);
+});
+
+// ── CONTACT FORM ──
+function submitContact(){
+  const n=document.getElementById('c-fname').value.trim();
+  if(!n){document.getElementById('c-fname').style.borderColor='rgba(200,100,100,.5)';document.getElementById('c-fname').focus();return}
+  const btn=document.querySelector('.f-submit');
+  btn.textContent='Opening booking calendar...';
+  btn.style.background='rgba(200,144,42,.8)';
+  setTimeout(()=>{
+    btn.style.display='none';
+    document.getElementById('f-success').style.display='block';
+    window.open(CALENDLY_URL,'_blank');
+  },800);
+}
+
+// ── HASH LOAD ──
+window.addEventListener('load',()=>{
+  const h=window.location.hash.replace('#','');
+  if(['services','about','expertise','contact'].includes(h))goTo(h);
+});
+</script>
+</body>
+</html>
